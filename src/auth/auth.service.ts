@@ -7,9 +7,18 @@ export class AuthService {
 		private jwtService: JwtService,
 	) {}
 
-	async signIn(payload: object) {
+	async accessToken(payload: object) {
+		return this.jwtService.sign(payload)
+	}
+	
+	async refreshAccessToken(payload: object) {
+		return this.jwtService.sign(payload, { expiresIn: '1d', algorithm: 'HS256' })
+	}
+
+	async getTokens(payload: object) {
 		return {
-			access_token: this.jwtService.sign(payload)
+			access_token: await this.accessToken(payload),
+			refresh_token: await this.refreshAccessToken(payload),
 		};
 	}
 }
